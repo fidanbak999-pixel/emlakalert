@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="az">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Emlak Alert — Bakı mənzil axtarışı</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="container nav-inner">
+        <a href="/" class="logo" aria-label="Emlak Alert">
+          <span class="logo-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
+          </span>
+          <span>Emlak<strong>Alert</strong></span>
+        </a>
+        <nav class="nav-links">
+          <a href="#results" class="active">Satış</a>
+          <a href="#results">Mənzillər</a>
+          <a href="#favorites" id="favNavLink">Seçilmişlər <span class="count" id="favCount">0</span></a>
+          <a href="#alert" data-email>Gündəlik email</a>
+        </nav>
+        <div class="nav-right">
+          <span class="email-pill" id="emailStatus" data-email>
+            <span class="dot"></span>
+            Yoxlanır…
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="container">
+        <div class="hero-card">
+          <div class="hero-content">
+            <span class="eyebrow">bina.az + emlak.az · bir axtarışda</span>
+            <h1>Xəyalındakı ev <span>bir axtarış</span> uzaqlığındadır</h1>
+            <p>Bakının sevdiyin rayonlarında təmirli, minimum 3 otaqlı satış mənzilləri — bina.az və emlak.az elanları bir yerdə.</p>
+          </div>
+
+          <form class="search-bar" id="heroSearch">
+            <div class="search-tabs" role="tablist">
+              <button type="button" class="tab active" role="tab" aria-selected="true">Satış</button>
+              <button type="button" class="tab" role="tab" disabled title="Tezliklə">Kirayə</button>
+            </div>
+            <div class="search-fields">
+              <div class="sf">
+                <span class="sf-label">Yer</span>
+                <span class="sf-value" id="heroLocSummary">8 yer seçilib</span>
+              </div>
+              <div class="sf">
+                <label class="sf-label" for="heroRooms">Otaq</label>
+                <select id="heroRooms" class="sf-input">
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                  <option value="3" selected>3+</option>
+                  <option value="4">4+</option>
+                  <option value="5">5+</option>
+                </select>
+              </div>
+              <div class="sf">
+                <label class="sf-label" for="heroPriceTo">Maks. qiymət</label>
+                <input id="heroPriceTo" class="sf-input" type="number" placeholder="AZN, məs. 300000" />
+              </div>
+              <button type="submit" class="btn btn-primary btn-search">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                Axtar
+              </button>
+            </div>
+          </form>
+
+          <div class="hero-stats">
+            <div><strong id="statTotal">—</strong><span>uyğun elan bazada</span></div>
+            <div><strong>8</strong><span>rayon və metro</span></div>
+            <div data-email><strong>08:00</strong><span>gündəlik email (Bakı)</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="container layout" id="results">
+      <aside class="sidebar" aria-label="Filtrlər">
+        <form id="searchForm">
+          <div class="side-head">
+            <h3>Filtrlər</h3>
+            <button type="button" class="link-btn" id="resetBtn">Sıfırla</button>
+          </div>
+
+          <div class="side-block">
+            <h4>Otaq sayı (min.)</h4>
+            <div class="seg" id="roomSeg">
+              <button type="button" data-v="1">1+</button>
+              <button type="button" data-v="2">2+</button>
+              <button type="button" data-v="3" class="on">3+</button>
+              <button type="button" data-v="4">4+</button>
+              <button type="button" data-v="5">5+</button>
+            </div>
+          </div>
+
+          <div class="side-block">
+            <h4>Qiymət, AZN</h4>
+            <div class="price-row">
+              <input type="number" id="priceFrom" placeholder="Min" />
+              <span>—</span>
+              <input type="number" id="priceTo" placeholder="Maks" />
+            </div>
+          </div>
+
+          <div class="side-block">
+            <label class="toggle">
+              <span>Yalnız təmirli</span>
+              <input type="checkbox" id="hasRepair" checked />
+              <span class="switch"></span>
+            </label>
+          </div>
+
+          <div class="side-block">
+            <h4>Rayon / metro</h4>
+            <div id="locationList" class="chips"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" id="searchBtn">Nəticələri göstər</button>
+        </form>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <div>
+            <h2 id="resultsTitle">Satış mənzilləri</h2>
+            <p id="resultsMeta">Yüklənir…</p>
+          </div>
+          <div class="content-tools">
+            <select id="sortSelect" aria-label="Sırala">
+              <option value="new">Ən yeni</option>
+              <option value="price-asc">Qiymət: ucuzdan</option>
+              <option value="price-desc">Qiymət: bahadan</option>
+              <option value="area-desc">Sahə: böyükdən</option>
+              <option value="ppm-asc">AZN/m²: ucuzdan</option>
+            </select>
+            <div class="view-toggle" role="group" aria-label="Görünüş">
+              <button type="button" data-view="grid" class="on" aria-label="Grid">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
+              </button>
+              <button type="button" data-view="list" aria-label="Siyahı">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><rect x="3" y="4" width="18" height="4" rx="2"/><rect x="3" y="10" width="18" height="4" rx="2"/><rect x="3" y="16" width="18" height="4" rx="2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="active-filters" id="activeFilters"></div>
+        <div id="warnings" class="warnings" hidden></div>
+        <div id="listings" class="grid"></div>
+      </section>
+    </main>
+
+    <section class="container" id="alert" data-email>
+      <div class="alert-banner">
+        <div>
+          <span class="eyebrow light">Avtomatik bildiriş</span>
+          <h2>Hər səhər 08:00-da yeni siyahı Gmail-ində</h2>
+          <p id="alertText">Server işlədikcə, kompüterin bağlı olsa belə, filtrinə uyğun elanlar göndərilir.</p>
+        </div>
+        <button type="button" class="btn btn-light" id="emailTestBtn">İndi email göndər</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="logo light">
+          <span class="logo-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
+          </span>
+          <span>Emlak<strong>Alert</strong></span>
+        </div>
+        <p>Elanlar orijinal saytlarda açılır (bina.az, emlak.az). Şəxsi axtarış üçündür.</p>
+        <p id="cronStatus" data-email></p>
+      </div>
+    </footer>
+
+    <div class="toast" id="toast" hidden></div>
+    <script src="/app.js"></script>
+  </body>
+</html>
